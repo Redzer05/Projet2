@@ -19,6 +19,17 @@ La gestion efficace des feux tricolores est essentielle pour améliorer la fluid
 - Priorisation des véhicules d'urgence.
 - Interface de monitoring et de configuration.
 
+## Capteurs et Actionneurs Utilisables
+
+Le système peut intégrer différents capteurs et actionneurs, tels que :
+
+- **Capteurs de présence de véhicules** (boucles inductives, capteurs infrarouges, radars)
+- **Capteurs de piétons** (boutons poussoirs, capteurs de mouvement, caméras)
+- **Capteurs environnementaux** (pluie, luminosité)
+- **Actionneurs pour feux tricolores** (relais, modules de commande LED)
+- **Systèmes sonores ou lumineux** pour l’alerte des piétons
+- **Modules de communication** (Wi-Fi, GSM, LoRa) pour la supervision à distance
+
 ## Installation
 
 1. Cloner le dépôt :
@@ -39,5 +50,9 @@ python main.py
 Les contributions sont les bienvenues ! Veuillez consulter le fichier `CONTRIBUTING.md`.
 
 ## Licence
+
+## User Story
+
+**En tant qu'utilisateur piéton**, je souhaite pouvoir appuyer sur un bouton à un passage piéton afin que le feu tricolore détecte ma présence et adapte rapidement le cycle pour me permettre de traverser en toute sécurité, même lorsque le trafic est dense. Ainsi, je me sens en sécurité et je ne dois pas attendre inutilement longtemps.
 
 Ce projet est sous licence MIT.
