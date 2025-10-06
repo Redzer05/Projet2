@@ -18,15 +18,15 @@ def feux(context, slave_id=0x00):
     print("=== DÉMARRAGE DU SYSTÈME DE FEUX ===")
     
     # État initial
-    context[slave_id].setValues(1, ADDR_FEUX_VERT, [1])
-    context[slave_id].setValues(1, ADDR_FEUX_PIETON_ROUGE, [1])
+    context[slave_id].setValues(1, ADDR_FEUX_VERT, [1])  # Coils
+    context[slave_id].setValues(1, ADDR_FEUX_PIETON_ROUGE, [1])  # Coils
     print(" État initial: Feu voiture VERT, Feu piéton ROUGE")
     
     while True:
         try:
-            # Lecture des entrées
-            bouton = context[slave_id].getValues(1, ADDR_BOUTON_PIETON, count=1)[0]
-            voiture = context[slave_id].getValues(1, ADDR_VOITURE, count=1)[0]
+            # Lecture des entrées - UTILISER COILS (0) au lieu de DISCRETE INPUTS (1)
+            bouton = context[slave_id].getValues(1, ADDR_BOUTON_PIETON, count=1)[0]  # Coils
+            voiture = context[slave_id].getValues(1, ADDR_VOITURE, count=1)[0]  # Coils
             
             # AFFICHAGE EN TEMPS RÉEL des entrées
             if bouton == 1:
@@ -34,7 +34,7 @@ def feux(context, slave_id=0x00):
             if voiture == 1:
                 print(" VOITURE DÉTECTÉE - DÉTECTÉ PAR LE SERVEUR !")
             
-            # Lecture des états actuels des feux pour le logging
+            # Lecture des états actuels des feux pour le logging - COILS aussi
             feu_vert = context[slave_id].getValues(1, ADDR_FEUX_VERT, count=1)[0]
             feu_rouge = context[slave_id].getValues(1, ADDR_FEUX_ROUGE, count=1)[0]
             feu_orange = context[slave_id].getValues(1, ADDR_FEUX_ORANGE, count=1)[0]
@@ -54,13 +54,13 @@ def feux(context, slave_id=0x00):
                 print("⏳ Attente de 3 secondes avant changement...")
                 time.sleep(3)
                 
-                # Phase 1: Feu voiture orange
+                # Phase 1: Feu voiture orange - COILS
                 context[slave_id].setValues(1, ADDR_FEUX_VERT, [0])
                 context[slave_id].setValues(1, ADDR_FEUX_ORANGE, [1])
                 print(" Feu voiture ORANGE")
                 time.sleep(2)
                 
-                # Phase 2: Feu voiture rouge, piéton vert
+                # Phase 2: Feu voiture rouge, piéton vert - COILS
                 context[slave_id].setValues(1, ADDR_FEUX_ORANGE, [0])
                 context[slave_id].setValues(1, ADDR_FEUX_ROUGE, [1])
                 context[slave_id].setValues(1, ADDR_FEUX_PIETON_ROUGE, [0])
@@ -68,14 +68,14 @@ def feux(context, slave_id=0x00):
                 print(" Feu voiture ROUGE,  Feu piéton VERT")
                 time.sleep(5)
                 
-                # Phase 3: Retour à l'état normal
+                # Phase 3: Retour à l'état normal - COILS
                 context[slave_id].setValues(1, ADDR_FEUX_ROUGE, [0])
                 context[slave_id].setValues(1, ADDR_FEUX_PIETON_VERT, [0])
                 context[slave_id].setValues(1, ADDR_FEUX_VERT, [1])
                 context[slave_id].setValues(1, ADDR_FEUX_PIETON_ROUGE, [1])
                 print(" Feu voiture VERT,  Feu piéton ROUGE")
                 
-                # Réinitialisation du bouton
+                # Réinitialisation du bouton - COILS
                 context[slave_id].setValues(1, ADDR_BOUTON_PIETON, [0])
                 print("=== FIN SÉQUENCE PIÉTON ===")
             
@@ -83,7 +83,7 @@ def feux(context, slave_id=0x00):
             elif voiture == 1:
                 print("=== DÉTECTION VOITURE ===")
                 
-                # Séquence orange rapide
+                # Séquence orange rapide - COILS
                 context[slave_id].setValues(1, ADDR_FEUX_VERT, [0])
                 context[slave_id].setValues(1, ADDR_FEUX_ORANGE, [1])
                 print(" Feu voiture ORANGE")
@@ -93,7 +93,7 @@ def feux(context, slave_id=0x00):
                 context[slave_id].setValues(1, ADDR_FEUX_VERT, [1])
                 print(" Feu voiture VERT")
                 
-                # Réinitialisation détection voiture
+                # Réinitialisation détection voiture - COILS
                 context[slave_id].setValues(1, ADDR_VOITURE, [0])
                 print("=== FIN SÉQUENCE VOITURE ===")
             
@@ -108,7 +108,7 @@ if __name__ == "__main__":
     initial_coils = [0] * 100
     
     device = ModbusDeviceContext(
-        co=ModbusSequentialDataBlock(0, initial_coils)
+        co=ModbusSequentialDataBlock(1, initial_coils)
     )
     context = ModbusServerContext(devices=device, single=True)
 
